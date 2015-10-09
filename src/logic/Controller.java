@@ -17,7 +17,7 @@ public class Controller {
 	private void startAnswering() {
 		QuestionClassification qc = new QuestionClassification();
 		for (Question question : questions.getQuestions().values()) {
-			qc.test(question);
+			qc.regexMatcher(question);
 		}
 	}
 }

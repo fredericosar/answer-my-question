@@ -34,17 +34,18 @@ public class QuestionClassification {
 	/**
 	 * Regex Matcher for preset rules
 	 */
-	public void test(Question question) {
-		
-		for(Type type : rules.keySet()){
-			if(rules.get(type) != null) 
-			for(String regex : rules.get(type)){
+	public void regexMatcher(Question question) {
+		boolean isMatch = false;
+		for (Type type : rules.keySet()) {
+			for (String regex : rules.get(type)) {
 				Pattern pattern = Pattern.compile(regex);
 				Matcher regexMatcher = pattern.matcher(question.getQuestion());
 				while (regexMatcher.find()) {
-					System.out.println(regexMatcher.group());
+					isMatch = true;
+				}
 			}
 		}
+		if(!isMatch) System.out.println(question.getQuestion());
 	}
 
 }
