@@ -19,10 +19,12 @@ public class Main {
 		File inputFile = new File(args[0]);
 		if (!inputFile.isFile())
 			throw new IllegalArgumentException("The file path is not valid.");
-
+		
 		Scanner fileScanner = new Scanner(inputFile);
 		String directory = fileScanner.next();
 		
+		// story classifier
+		StoryClassifier sc = new StoryClassifier();
 		// iterate on each story
 		while(fileScanner.hasNext()){
 			// read StoryID
@@ -31,6 +33,8 @@ public class Main {
 			// save history
 			File fStory = new File(directory + storyID + STORY);
 			Story story = new Story(new String(Files.readAllBytes(fStory.toPath())));
+			// classify story
+			sc.classifyStory(story);
 			
 			// save questions
 			Questions questions = new Questions();
@@ -38,7 +42,7 @@ public class Main {
 			Files.lines(question.toPath()).forEachOrdered(questions::addQuestion);
 
 			// send it to controller
-			new Controller(story, questions);
+			new Controller(sc, story, questions);
 		}
 
 		fileScanner.close();
