@@ -1,32 +1,66 @@
 package logic;
 
 import boilerplate.*;
-import static boilerplate.Question.Type;
 
 public class Controller {
 
-	private StoryClassifier sc;
 	private Story story;
+	private StoryClassifier sc;
 	private Questions questions;
+	private QuestionClassifier qc;
 
-	public Controller(StoryClassifier sc, Story story, Questions questions) throws Exception {
-		this.sc = sc;
-		this.story = story;
-		this.questions = questions;
-		// answer the question
-		answerQuestions();
+	public Controller() throws Exception {
+		/* create classifiers */
+		qc = new QuestionClassifier();
+		sc = new StoryClassifier();
 	}
 
-	private void answerQuestions() {
-		QuestionClassifier qc = new QuestionClassifier();
+	public void processQuestions() {
+		/* generate bag of words for story */
+		sc.generateBagOfWords(story);
+		/* iterate through each story */
 		for (Question question : questions.getQuestions().values()) {
-			// tag question with its type
+			/* tag question with its type */
 			qc.regexMatcher(question);
-			// answer question based on the type
-			if (question.getType() == Type.WHERE){
+			/* generate bags of words for question */
+			qc.generateBagOfWords(question);
+			/* generate NER */
+			sc.getNER(story);
+			/* generate intersection scores */
+			sc.getIntersectionScores(question, story);
+			/* look for question type */
+			switch (question.getType()) {
+			case WHO:
 				System.out.println(question.getQuestion());
-//				sc.findNER(story);
+				/* find a person tag */
+				int max = 0;
+				String ans = "";
+				for (int i = 0; i < story.getIntersectionScore().size(); i++) {
+					if(story.getIntersectionScore().get(i) > 0){
+						for(String person : sc.findNER(story)){
+							if(story.getSentence(i).contains(person)) {
+								if(story.getIntersectionScore().get(i) > max){
+									max = story.getIntersectionScore().get(i);
+									ans = person;
+								}
+							}
+						}
+					}
+				}
+				System.out.println(ans);
+				break;
+			default:
+				break;
 			}
 		}
+	}
+
+	/** Getters and Setters **/
+	public void setStory(Story story) {
+		this.story = story;
+	}
+
+	public void setQuestions(Questions questions) {
+		this.questions = questions;
 	}
 }

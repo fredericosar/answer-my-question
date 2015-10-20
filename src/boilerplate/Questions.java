@@ -11,11 +11,6 @@ public class Questions {
 	private boolean hasID;
 	private String temporaryID;
 	
-	/* Getters and Setters */
-	public Map<String, Question> getQuestions() {
-		return questions;
-	}
-	
 	public Questions(){
 		questions = new TreeMap<String, Question>();
 		hasID = false;
@@ -36,5 +31,10 @@ public class Questions {
 			questions.put(temporaryID, new Question(data));
 			hasID = false;
 		}
+	}
+	
+	/** Getters and Setters **/
+	public Map<String, Question> getQuestions() {
+		return questions;
 	}
 }

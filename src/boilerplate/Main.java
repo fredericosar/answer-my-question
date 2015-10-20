@@ -11,11 +11,11 @@ public class Main {
 	private static final String QUESTION = ".questions";
 	
 	public static void main(String[] args) throws Exception {
-		// Argument handling
+		/*Argument handling */
 		if (args.length < 1)
 			throw new IllegalArgumentException("An arguments is required. <inputfile>");
 
-		// File Handling
+		/* File Handling */
 		File inputFile = new File(args[0]);
 		if (!inputFile.isFile())
 			throw new IllegalArgumentException("The file path is not valid.");
@@ -23,26 +23,27 @@ public class Main {
 		Scanner fileScanner = new Scanner(inputFile);
 		String directory = fileScanner.next();
 		
-		// story classifier
-		StoryClassifier sc = new StoryClassifier();
-		// iterate on each story
+		/* create the controller variable */
+		Controller controller = new Controller();
+		
+		/* iterate on each story */
 		while(fileScanner.hasNext()){
-			// read StoryID
+			/* read StoryID */
 			String storyID = fileScanner.next();
 			
-			// save history
+			/* save history */
 			File fStory = new File(directory + storyID + STORY);
 			Story story = new Story(new String(Files.readAllBytes(fStory.toPath())));
-			// classify story
-			sc.classifyStory(story);
+			controller.setStory(story);
 			
-			// save questions
+			/* save questions */
 			Questions questions = new Questions();
 			File question = new File(directory + storyID + QUESTION);
 			Files.lines(question.toPath()).forEachOrdered(questions::addQuestion);
-
-			// send it to controller
-			new Controller(sc, story, questions);
+			controller.setQuestions(questions);
+			
+			/* process questions */
+			controller.processQuestions();
 		}
 
 		fileScanner.close();

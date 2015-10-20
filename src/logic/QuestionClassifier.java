@@ -1,25 +1,23 @@
 package logic;
 
+import java.io.StringReader;
 import java.util.*;
 import java.util.regex.*;
 
+import edu.stanford.nlp.ling.HasWord;
+import edu.stanford.nlp.process.DocumentPreprocessor;
 import rules.*;
 import boilerplate.*;
 import boilerplate.Question.Type;
 
+
 public class QuestionClassifier {
 
-//	private Question question;
 	private Map<Type, List<String>> rules;
 
 	public QuestionClassifier() {
 		rules = new HashMap<Type, List<String>>();
 		getRules();
-	}
-
-	/** Getters and Setters **/
-	public void setQuestion(Question question) {
-//		this.question = question;
 	}
 
 	/**
@@ -46,8 +44,21 @@ public class QuestionClassifier {
 				}
 			}
 		}
+		/* print question we didn't match */
+		/* TODO: Remove on final version */
 		if (!isMatch)
 			System.out.println(question.getQuestion());
+	}
+
+	/**
+	 * Generate bag of words
+	 */
+	public void generateBagOfWords(Question question) {
+		/* process sentences */
+		DocumentPreprocessor dp = new DocumentPreprocessor(new StringReader(question.getQuestion()));
+		for (List<HasWord> words : dp) {
+			question.setBagOfWords(words);
+		}
 	}
 
 }
