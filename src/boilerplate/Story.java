@@ -12,7 +12,6 @@ public class Story {
 	private String text;
 	
 	private List<List<HasWord>> bagsOfWords;
-	private List<Integer> intersectionScore;
 	
 	private String NERStory;
 	
@@ -54,14 +53,6 @@ public class Story {
 	
 	public void setNERStory(String NERStory) {
 		this.NERStory = NERStory;
-	}
-
-	public List<Integer> getIntersectionScore() {
-		return intersectionScore;
-	}
-
-	public void setIntersectionScore(List<Integer> intersectionScore) {
-		this.intersectionScore = intersectionScore;
 	}
 
 	public String getText() {

@@ -4,15 +4,15 @@ import java.util.*;
 
 public class Questions {
 
-	private static final String QUESTION_ID = "QuestionID";
-	private static final String QUESTION = "Question";
+	public static final String QUESTION_ID = "QuestionID";
+	public static final String QUESTION = "Question";
 	
 	private Map<String, Question> questions;
 	private boolean hasID;
 	private String temporaryID;
 	
 	public Questions(){
-		questions = new TreeMap<String, Question>();
+		questions = new LinkedHashMap<String, Question>();
 		hasID = false;
 	}
 	
