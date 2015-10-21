@@ -1,4 +1,4 @@
-package logic;
+package answer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,7 @@ import boilerplate.Question;
 import boilerplate.Story;
 import edu.stanford.nlp.ling.HasWord;
 
-public class ScoreGenerator {
+public class CommonAnswerer {
 
 	/**
 	 * Return an array of scores for the given bag
@@ -26,7 +26,7 @@ public class ScoreGenerator {
 				for(HasWord w2 : question.getBagOfWords()){
 					if(!sw.isStopWord(w1.word().toLowerCase())){
 						if(w1.word().toLowerCase().equals(w2.word().toLowerCase())){
-							score = score + Scores.CLUE;
+							score = score + Scores.OK;
 						}
 					}
 				}
@@ -35,4 +35,5 @@ public class ScoreGenerator {
 		}
 		return intersectionScore;
 	}
+	
 }

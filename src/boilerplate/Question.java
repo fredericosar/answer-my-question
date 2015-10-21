@@ -7,6 +7,7 @@ import edu.stanford.nlp.ling.HasWord;
 public class Question {
 
 	private String question;
+	private String NER;
 	private List<Type> types;
 	private List<HasWord> bagOfWords;
 	
@@ -46,6 +47,14 @@ public class Question {
 	
 	public List<HasWord> getBagOfWords() {
 		return bagOfWords;
+	}
+	
+	public String getNERStory() {
+		return NER;
+	}
+	
+	public void setNER(String NER) {
+		this.NER = NER;
 	}
 	
 }

@@ -7,7 +7,7 @@ import logic.*;
 
 public class Main {
 
-	public static final boolean DEBUG_MODE = true;
+	public static final boolean DEBUG_MODE = false;
 	
 	private static final String STORY = ".story";
 	private static final String QUESTION = ".questions";

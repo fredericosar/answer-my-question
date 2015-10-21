@@ -9,11 +9,9 @@ import edu.stanford.nlp.ling.Sentence;
 public class Story {
 
 	private String story;
+	private String NER;
 	private String text;
-	
 	private List<List<HasWord>> bagsOfWords;
-	
-	private String NERStory;
 	
 	public Story(String story) {
 		this.story = story;
@@ -48,11 +46,11 @@ public class Story {
 	}
 	
 	public String getNERStory() {
-		return NERStory;
+		return NER;
 	}
 	
-	public void setNERStory(String NERStory) {
-		this.NERStory = NERStory;
+	public void setNER(String NER) {
+		this.NER = NER;
 	}
 
 	public String getText() {

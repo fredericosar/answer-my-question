@@ -4,6 +4,8 @@ import java.io.StringReader;
 import java.util.*;
 import java.util.regex.*;
 
+import edu.stanford.nlp.ie.AbstractSequenceClassifier;
+import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.ling.HasWord;
 import edu.stanford.nlp.process.DocumentPreprocessor;
 import rules.*;
@@ -13,9 +15,11 @@ import boilerplate.Question.Type;
 
 public class QuestionClassifier {
 
+	private AbstractSequenceClassifier<CoreLabel> classifier;
 	private Map<Type, List<String>> rules;
-
-	public QuestionClassifier() {
+	
+	public QuestionClassifier(AbstractSequenceClassifier<CoreLabel> classifier){
+		this.classifier = classifier;
 		rules = new HashMap<Type, List<String>>();
 		getRules();
 	}
@@ -59,6 +63,14 @@ public class QuestionClassifier {
 		for (List<HasWord> words : dp) {
 			question.setBagOfWords(words);
 		}
+	}
+	
+	/**
+	 * Get NER for the given story
+	 */
+	public void getNER(Question question) {
+		/* classify story */
+		question.setNER(classifier.classifyWithInlineXML(question.getQuestion()));
 	}
 
 }
