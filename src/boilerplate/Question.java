@@ -1,18 +1,16 @@
 package boilerplate;
 
 import java.util.*;
-
 import edu.stanford.nlp.ling.HasWord;
 
 public class Question {
 
 	private String question;
-	private String NER;
-	private List<Type> types;
+	private List<QType> types;
 	private List<HasWord> bagOfWords;
 	
-	public enum Type {
-		WHICH, WHY, WHOSE, WHAT, HOW, WHEN, WHERE, WHO;
+	public enum QType {
+		WHICH, WHY, WHOSE, WHAT, HOW, WHEN, WHERE, WHO, UNKNOWN;
 	};
 
 	/**
@@ -22,14 +20,18 @@ public class Question {
 	 */
 	public Question(String question) {
 		this.question = question;
-		types = new ArrayList<Question.Type>();
+		types = new ArrayList<QType>();
 	}
 	
 	/**
 	 * Return the type of the question
 	 */
-	public Type getType() {
-		return types.get(0); /* TODO: Allow multiple types */
+	public QType getType() {
+		try{
+			return types.get(0); /* TODO: Allow multiple types */
+		}catch(IndexOutOfBoundsException e){
+			return QType.UNKNOWN;
+		}
 	}
 	
 	/** Getters and Setters **/
@@ -37,7 +39,7 @@ public class Question {
 		return question;
 	}
 
-	public void addType(Type type) {
+	public void addType(QType type) {
 		types.add(type);
 	}
 	
@@ -48,13 +50,4 @@ public class Question {
 	public List<HasWord> getBagOfWords() {
 		return bagOfWords;
 	}
-	
-	public String getNERStory() {
-		return NER;
-	}
-	
-	public void setNER(String NER) {
-		this.NER = NER;
-	}
-	
 }

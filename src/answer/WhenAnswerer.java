@@ -3,47 +3,42 @@ package answer;
 import java.util.ArrayList;
 
 import logic.StoryClassifier;
-import boilerplate.*;
-import rules.AnswerRules.Type;
+import rules.AnswerRules.AType;
+import boilerplate.Story;
 
 public class WhenAnswerer {
 
-	private Question question;
 	private Story story;
 	private StoryClassifier sc;
 	private ArrayList<Integer> scores;
 
-	public WhenAnswerer(Question question, Story story, StoryClassifier sc) {
-		this.question = question;
+	public WhenAnswerer(Story story, StoryClassifier sc, ArrayList<Integer> scores) {
 		this.story = story;
 		this.sc = sc;
+		this.scores = scores;
 	}
 
 	/**
-	 * Answer the why question
+	 * Answer the WHEN question
 	 */
 	public void answer() {
-		int max = 0;
-		String ans = "";
-		for (int i = 0; i < scores.size(); i++) {
-			if (scores.get(i) > 0) {
-				/* look for a date tag */
-				for (String person : sc.findNER(story, Type.DATE)) {
-					if (story.getSentence(i).contains(person)) {
-						if (scores.get(i) > max) {
-							max = scores.get(i);
-							ans = person;
-						}
-					}
-				}
+		int bestSentence = 0;
+		/* goes on each sentence */
+		for(int i = 0; i < story.getBagsOfWords().size(); i++){
+			String sentence = story.getSentence(i);
+			String sentenceNER = sc.getNER(sentence);
+			/* looks for a DATE TAG */
+			if(!sc.findNER(sentenceNER, AType.DATE).isEmpty()){
+				/* check for best score */
+				bestSentence = (scores.get(i) > scores.get(bestSentence)) ? i : bestSentence;
 			}
 		}
-		System.out.println(ans);
-	}
-
-	/** Getters and Setters **/
-	public void setScores(ArrayList<Integer> scores) {
-		this.scores = scores;
+		/* Print DATE on best sentence - @TODO: fix printing first */
+		try{
+			System.out.println(sc.findNER(sc.getNER(story.getSentence(bestSentence)), AType.DATE).get(0));
+		}catch(IndexOutOfBoundsException e){
+			System.out.println();
+		}
 	}
 
 }

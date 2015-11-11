@@ -25,20 +25,20 @@ public class QuestionRules {
 	/**
 	 ** Return a list of regex rules to identify the question
 	 **/
-	public static List<String> getRules(Type type) {
-		if (type == Type.WHICH)
+	public static List<String> getRules(QType type) {
+		if (type == QType.WHICH)
 			return whichRules;
-		if (type == Type.WHY)
+		if (type == QType.WHY)
 			return whyRules;
-		if (type == Type.WHOSE)
+		if (type == QType.WHOSE)
 			return whoseRules;
-		if (type == Type.WHAT)
+		if (type == QType.WHAT)
 			return whatRules;
-		if (type == Type.HOW)
+		if (type == QType.HOW)
 			return howRules;
-		if (type == Type.WHEN)
+		if (type == QType.WHEN)
 			return whenRules;
-		if (type == Type.WHERE)
+		if (type == QType.WHERE)
 			return whereRules;
 		else
 			return whoRules;

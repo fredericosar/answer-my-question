@@ -25,6 +25,9 @@ public class Main {
 		Scanner fileScanner = new Scanner(inputFile);
 		String directory = fileScanner.next();
 		
+		/* print error messages in controlled environment*/
+		System.setErr(new PrintStream("runningMessages"));
+		
 		/* create the controller variable */
 		Controller controller = new Controller();
 		

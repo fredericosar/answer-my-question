@@ -6,7 +6,9 @@ import java.util.Map.Entry;
 import edu.stanford.nlp.ie.AbstractSequenceClassifier;
 import edu.stanford.nlp.ie.crf.CRFClassifier;
 import edu.stanford.nlp.ling.CoreLabel;
+import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 import answer.CommonAnswerer;
+import answer.HowAnswerer;
 import answer.WhenAnswerer;
 import answer.WhereAnswerer;
 import answer.WhoAnswerer;
@@ -18,7 +20,8 @@ public class Controller {
 	private StoryClassifier sc;
 	private Questions questions;
 	private QuestionClassifier qc;
-
+	private MaxentTagger tagger;
+	
 	public Controller() throws Exception {
 		/* load NER classifier */
 		String serializedClassifier = "libraries/stanford-ner/classifiers/english.muc.7class.distsim.crf.ser.gz";
@@ -28,6 +31,9 @@ public class Controller {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		/* load POSTAGGER models */
+		String posModel = "libraries/stanford-postagger/models/english-bidirectional-distsim.tagger";
+		tagger = new MaxentTagger(posModel);
 		/* create classifiers */
 		qc = new QuestionClassifier(NERclassifier);
 		sc = new StoryClassifier(NERclassifier);
@@ -46,30 +52,28 @@ public class Controller {
 			qc.regexMatcher(question);
 			/* generate bags of words for question */
 			qc.generateBagOfWords(question);
-			/* POS tag */
-			/* NER Classifier */
-			sc.getNER(story);
 			/* generate intersection scores */
-			ArrayList<Integer> scores = CommonAnswerer.getIntersectionScores(question, story);
+			ArrayList<Integer> scores = CommonAnswerer.getIntersectionScores(question, story, tagger);
 			/* look for question type */
-			System.out.print("Answer:" );
+			System.out.print("Answer: ");
 			/* create a generic object */
 			switch (entry.getValue().getType()) {
 			case WHO:
-				WhoAnswerer who = new WhoAnswerer(question, story, sc);
-				who.setScores(scores);
+				WhoAnswerer who = new WhoAnswerer(story, sc, scores);
 				who.answer();
 				break;
 			case WHERE:
-				WhereAnswerer where = new WhereAnswerer(question, story, sc);
-				where.setScores(scores);
+				WhereAnswerer where = new WhereAnswerer(story, sc, scores);
 				where.answer();
 				break;
 			case WHEN:
-				WhenAnswerer when = new WhenAnswerer(question, story, sc);
-				when.setScores(scores);
+				WhenAnswerer when = new WhenAnswerer(story, sc, scores);
 				when.answer();
 				break;
+//			case HOW:
+//				HowAnswerer how = new HowAnswerer(question, story, sc, scores);
+//				how.answer();
+//				break;
 			default:
 				System.out.println();
 				break;

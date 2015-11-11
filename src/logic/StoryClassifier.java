@@ -7,7 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import rules.AnswerRules;
-import rules.AnswerRules.Type;
+import rules.AnswerRules.AType;
 import boilerplate.Story;
 import edu.stanford.nlp.ie.AbstractSequenceClassifier;
 import edu.stanford.nlp.ling.CoreLabel;
@@ -27,28 +27,28 @@ public class StoryClassifier {
 	 */
 	public void generateBagOfWords(Story story) {
 		/* process sentences */
-		DocumentPreprocessor dp = new DocumentPreprocessor(new StringReader(story.getText()));
+		DocumentPreprocessor dp = new DocumentPreprocessor(new StringReader(story.getText().replace("'", "")));
 		for (List<HasWord> sentence : dp) {
 			story.addBagOfWords(sentence);
 		}
 	}
 	
 	/**
-	 * Get NER for the given story
+	 * Get NER for the given text
 	 */
-	public void getNER(Story story) {
-		/* classify story */
-		story.setNER(classifier.classifyWithInlineXML(story.getStory()));
+	public String getNER(String text) {
+		/* get NER for text */
+		return classifier.classifyWithInlineXML(text);
 	}
 	
 	/**
 	 * Find NER tags based on the given rule type
 	 */
-	public ArrayList<String> findNER(Story story, Type type) {
+	public ArrayList<String> findNER(String text, AType type) {
 		ArrayList<String> tags = new ArrayList<>();
 		for (String regex : AnswerRules.getNERRule(type)) {
 			Pattern pattern = Pattern.compile(regex);
-			Matcher regexMatcher = pattern.matcher(story.getNERStory());
+			Matcher regexMatcher = pattern.matcher(text);
 			while (regexMatcher.find()) {
 				tags.add(regexMatcher.group(1));
 			}

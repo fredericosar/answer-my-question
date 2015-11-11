@@ -9,7 +9,6 @@ import edu.stanford.nlp.ling.Sentence;
 public class Story {
 
 	private String story;
-	private String NER;
 	private String text;
 	private List<List<HasWord>> bagsOfWords;
 	
@@ -43,14 +42,6 @@ public class Story {
 
 	public List<List<HasWord>> getBagsOfWords() {
 		return bagsOfWords;
-	}
-	
-	public String getNERStory() {
-		return NER;
-	}
-	
-	public void setNER(String NER) {
-		this.NER = NER;
 	}
 
 	public String getText() {

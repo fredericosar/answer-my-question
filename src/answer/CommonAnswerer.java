@@ -8,6 +8,7 @@ import rules.StopWords;
 import boilerplate.Question;
 import boilerplate.Story;
 import edu.stanford.nlp.ling.HasWord;
+import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 
 public class CommonAnswerer {
 
@@ -15,18 +16,30 @@ public class CommonAnswerer {
 	 * Return an array of scores for the given bag
 	 * based on bag for the story
 	 */
-	public static ArrayList<Integer> getIntersectionScores(Question question, Story story) {
+	public static ArrayList<Integer> getIntersectionScores(Question question, Story story, MaxentTagger tagger) {
 		/* stop word */
 		StopWords sw = new StopWords();
 		/* get intersection score */
 		ArrayList<Integer> intersectionScore = new ArrayList<Integer>();
+		/* go on each sentence */
 		for(List<HasWord> bags : story.getBagsOfWords()){
+			ArrayList<String> matchedSoFar = new ArrayList<String>();
 			int score = 0;
+			/* get each word on sentence */
 			for(HasWord w1 : bags){
+				/* get each word on question */
 				for(HasWord w2 : question.getBagOfWords()){
 					if(!sw.isStopWord(w1.word().toLowerCase())){
+//						if(MorphaStemmer.morpha(w1.word(),false).toLowerCase().equals(MorphaStemmer.morpha(w2.word(),false).toLowerCase())){
 						if(w1.word().toLowerCase().equals(w2.word().toLowerCase())){
-							score = score + Scores.OK;
+							if(!matchedSoFar.contains((w1.word().toLowerCase()))){
+								if(tagger.tagString(w1.word()).contains("VB")){
+									score = score + Scores.CONFIDENT;
+								}else{
+									score = score + Scores.CLUE;
+								}
+								matchedSoFar.add(w1.word().toLowerCase());
+							}
 						}
 					}
 				}
@@ -36,4 +49,18 @@ public class CommonAnswerer {
 		return intersectionScore;
 	}
 	
+	/**
+	 * Find best score
+	 */
+	public static int findBest(ArrayList<Integer> scores){
+		int maxSoFar = -1;
+		int best = -1;
+		for(int i = 0; i < scores.size(); i++){
+			if(scores.get(i) > maxSoFar){
+				maxSoFar = scores.get(i);
+				best = i;
+			}
+		}
+		return best;
+	}
 }
