@@ -38,21 +38,18 @@ public class QuestionClassifier {
 	 * Regex Matcher for preset rules
 	 */
 	public void regexMatcher(Question question) {
-//		boolean isMatch = false;
-		for (QType type : rules.keySet()) {
-			for (String regex : rules.get(type)) {
-				Pattern pattern = Pattern.compile(regex);
-				Matcher regexMatcher = pattern.matcher(question.getQuestion());
-				while (regexMatcher.find()) {
-					question.addType(type);
-//					isMatch = true;
+		
+		for(String word : question.getQuestion().split("\\s")){
+			for (QType type : rules.keySet()) {
+				for (String regex : rules.get(type)) {
+					Pattern pattern = Pattern.compile(regex);
+					Matcher regexMatcher = pattern.matcher(word);
+					while (regexMatcher.find()) {
+						question.addType(type);
+					}
 				}
 			}
 		}
-		/* print question we didn't match */
-		/* TODO: Remove on final version */
-//		if (!isMatch)
-//			System.out.println(question.getQuestion());
 	}
 	
 	/**

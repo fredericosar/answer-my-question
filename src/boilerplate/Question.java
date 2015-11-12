@@ -6,7 +6,7 @@ import edu.stanford.nlp.ling.HasWord;
 public class Question {
 
 	private String question;
-	private List<QType> types;
+	private LinkedHashSet<QType> types;
 	private List<HasWord> bagOfWords;
 	
 	public enum QType {
@@ -20,7 +20,7 @@ public class Question {
 	 */
 	public Question(String question) {
 		this.question = question;
-		types = new ArrayList<QType>();
+		types = new LinkedHashSet<Question.QType>();
 	}
 	
 	/**
@@ -28,8 +28,8 @@ public class Question {
 	 */
 	public QType getType() {
 		try{
-			return types.get(0); /* TODO: Allow multiple types */
-		}catch(IndexOutOfBoundsException e){
+			return types.iterator().next(); /* TODO: Allow multiple types */
+		}catch(NoSuchElementException  e){
 			return QType.UNKNOWN;
 		}
 	}

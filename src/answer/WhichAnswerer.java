@@ -7,14 +7,14 @@ import boilerplate.*;
 import rules.Scores;
 import rules.AnswerRules.AType;
 
-public class HowAnswerer {
+public class WhichAnswerer {
 
 	private Question question;
 	private Story story;
 	private StoryClassifier sc;
 	private ArrayList<Integer> scores;
 
-	public HowAnswerer(Question question, Story story, StoryClassifier sc, ArrayList<Integer> scores) {
+	public WhichAnswerer(Question question, Story story, StoryClassifier sc, ArrayList<Integer> scores) {
 		this.question = question;
 		this.story = story;
 		this.sc = sc;
@@ -22,7 +22,7 @@ public class HowAnswerer {
 	}
 
 	/**
-	 * Answer the HOW question
+	 * Answer the WHICH question
 	 */
 	public void answer(){
 		String bestSentence = story.getSentence(CommonAnswerer.findBest(scores));

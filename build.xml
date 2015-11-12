@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="build" name="AnswerMyQuestions">
+    <property environment="env"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.8"/>
+    <property name="source" value="1.8"/>
+    <path id="AnswerMyQuestions.classpath">
+        <pathelement location="bin"/>
+        <pathelement location="libraries/stanford-ner/stanford-ner-3.5.2.jar"/>
+        <pathelement location="libraries/stanford-postagger/stanford-postagger-3.5.2.jar"/>
+        <pathelement location="libraries/uw-morpha/morpha-stemmer-1.0.5.jar"/>
+    </path>
+	
+    <target name="init">
+        <mkdir dir="bin"/>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="src">
+                <exclude name="**/*.launch"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    
+	<target name="clean">
+        <delete dir="bin"/>
+		<delete file="AnswerMyQuestion.jar"/>
+    </target>
+    
+	<target depends="clean" name="cleanall"/>
+    <target depends="build-subprojects,build-project" name="build"/>
+    <target name="build-subprojects"/>
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
+            <src path="src"/>
+            <classpath refid="AnswerMyQuestions.classpath"/>
+        </javac>
+    </target>
+	
+	 <target name="jar">
+	        <mkdir dir="bin/jar"/>
+	        <jar destfile="AnswerMyQuestion.jar" basedir="bin">
+	        	<zipgroupfileset dir="libraries/stanford-ner/" includes="*.jar"/>
+	        	<zipgroupfileset dir="libraries/stanford-postagger/" includes="*.jar"/>
+	        	<zipgroupfileset dir="libraries/uw-morpha/" includes="*.jar"/>
+	            <manifest>
+	                <attribute name="Main-Class" value="boilerplate.Main"/>
+	            </manifest>
+	        </jar>
+	    </target>
+</project>

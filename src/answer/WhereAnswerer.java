@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import logic.StoryClassifier;
 import boilerplate.*;
+import rules.Scores;
 import rules.AnswerRules.AType;
 
 public class WhereAnswerer {
@@ -21,23 +22,27 @@ public class WhereAnswerer {
 	/**
 	 * Answer the WHERE question
 	 */
-	public void answer() {
-		int bestSentence = 0;
-		/* goes on each sentence */
+	public void answer(){
 		for(int i = 0; i < story.getBagsOfWords().size(); i++){
-			String sentenceNER = sc.getNER(story.getSentence(i));
-			/* looks for a LOCATION TAG */
-			if(!sc.findNER(sentenceNER, AType.LOCATION).isEmpty()){
-				/* check for best score */
-				bestSentence = (scores.get(i) > scores.get(bestSentence)) ? i : bestSentence;
+			/* get sentence */
+			String sentence = story.getSentence(i);
+			/* rule #2 */
+			if(CommonAnswerer.regexMatcher(sentence, "in|on|near|inside")){
+				scores.set(i, scores.get(i) + Scores.GOOD_CLUE);
+			}
+			/* rule #3 */
+			if(!sc.findNER(sc.getNER(sentence), AType.LOCATION).isEmpty()){
+				scores.set(i, scores.get(i) + Scores.CONFIDENT);
 			}
 		}
-		/* Print LOCATION on best sentence - @TODO: fix printing first */
-		try{
-			System.out.println(sc.findNER(sc.getNER(story.getSentence(bestSentence)), AType.LOCATION).get(0));
-		}catch(IndexOutOfBoundsException e){
-			System.out.println();
+		/* answer */
+		String bestSentence = story.getSentence(CommonAnswerer.findBest(scores));
+		ArrayList<String> tags = sc.findNER(sc.getNER(bestSentence), AType.LOCATION);
+		if(!tags.isEmpty()){
+			for(String tag : tags) System.out.print(tag + " ");
+		}else{
+			System.out.print(bestSentence);
 		}
+		System.out.println();
 	}
-
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import logic.StoryClassifier;
 import boilerplate.*;
+import rules.Scores;
 import rules.AnswerRules.AType;
 
 public class WhoAnswerer {
@@ -21,22 +22,35 @@ public class WhoAnswerer {
 	/**
 	 * Answer the WHO question
 	 */
-	public void answer() {
-		int bestSentence = 0;
-		/* goes on each sentence */
+	public void answer(){
 		for(int i = 0; i < story.getBagsOfWords().size(); i++){
-			String sentenceNER = sc.getNER(story.getSentence(i));
-			/* looks for a PERSON TAG */
-			if(!sc.findNER(sentenceNER, AType.PERSON).isEmpty()){
-				/* check for best score */
-				bestSentence = (scores.get(i) > scores.get(bestSentence)) ? i : bestSentence;
+			/* get sentence */
+			String sentence = story.getSentence(i);
+			/* rule #2 */
+			if(sc.findNER(sc.getNER(sentence), AType.PERSON).isEmpty()){
+				if(!sc.findNER(sc.getNER(sentence), AType.PERSON).isEmpty()){
+					scores.set(i, scores.get(i) + Scores.CONFIDENT);
+				}
+			}
+			/* rule #3 */
+			if(sc.findNER(sc.getNER(sentence), AType.PERSON).isEmpty()){
+				if(CommonAnswerer.regexMatcher(sentence, "name")){
+					scores.set(i, scores.get(i) + Scores.GOOD_CLUE);
+				}
+			}
+			/* rule #4 */
+			if(!sc.findNER(sc.getNER(sentence), AType.PERSON).isEmpty()){
+				scores.set(i, scores.get(i) + Scores.GOOD_CLUE);
 			}
 		}
-		/* Print PERSON on best sentence - @TODO: fix printing first */
-		try{
-			System.out.println(sc.findNER(sc.getNER(story.getSentence(bestSentence)), AType.PERSON).get(0));
-		}catch(IndexOutOfBoundsException e){
-			System.out.println();
-		}
+		/* answer */
+		String bestSentence = story.getSentence(CommonAnswerer.findBest(scores));
+//		ArrayList<String> tags = sc.findNER(sc.getNER(bestSentence), AType.PERSON);
+//		if(!tags.isEmpty()){
+//			for(String tag : tags) System.out.print(tag + " ");
+//		}else{
+			System.out.print(bestSentence);
+//		}
+		System.out.println();
 	}
 }

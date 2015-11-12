@@ -2,6 +2,8 @@ package answer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import rules.Scores;
 import rules.StopWords;
@@ -33,14 +35,14 @@ public class CommonAnswerer {
 //						if(MorphaStemmer.morpha(w1.word(),false).toLowerCase().equals(MorphaStemmer.morpha(w2.word(),false).toLowerCase())){
 						if(w1.word().toLowerCase().equals(w2.word().toLowerCase())){
 							if(!matchedSoFar.contains((w1.word().toLowerCase()))){
-								if(tagger.tagString(w1.word()).contains("VB")){
+//								if(tagger.tagString(w1.word()).contains("VB")){
 									score = score + Scores.CONFIDENT;
 								}else{
 									score = score + Scores.CLUE;
 								}
 								matchedSoFar.add(w1.word().toLowerCase());
 							}
-						}
+//						}
 					}
 				}
 			}
@@ -62,5 +64,14 @@ public class CommonAnswerer {
 			}
 		}
 		return best;
+	}
+	
+	/**
+	 * Regex Matcher
+	 */
+	public static boolean regexMatcher(String sentence, String regex) {
+		Pattern pattern = Pattern.compile(regex.toLowerCase());
+		Matcher regexMatcher = pattern.matcher(sentence.toLowerCase());
+		return regexMatcher.find();
 	}
 }

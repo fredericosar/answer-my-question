@@ -9,8 +9,10 @@ import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 import answer.CommonAnswerer;
 import answer.HowAnswerer;
+import answer.WhatAnswerer;
 import answer.WhenAnswerer;
 import answer.WhereAnswerer;
+import answer.WhichAnswerer;
 import answer.WhoAnswerer;
 import boilerplate.*;
 
@@ -67,13 +69,21 @@ public class Controller {
 				where.answer();
 				break;
 			case WHEN:
-				WhenAnswerer when = new WhenAnswerer(story, sc, scores);
+				WhenAnswerer when = new WhenAnswerer(question, story, sc, scores);
 				when.answer();
 				break;
-//			case HOW:
-//				HowAnswerer how = new HowAnswerer(question, story, sc, scores);
-//				how.answer();
-//				break;
+			case WHAT:
+				WhatAnswerer what = new WhatAnswerer(question, story, scores);
+				what.answer();
+				break;
+			case HOW:
+				HowAnswerer how = new HowAnswerer(question, story, sc, scores);
+				how.answer();
+				break;
+			case WHICH:
+				WhichAnswerer which = new WhichAnswerer(question, story, sc, scores);
+				which.answer();
+				break;
 			default:
 				System.out.println();
 				break;
