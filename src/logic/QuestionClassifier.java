@@ -79,7 +79,7 @@ public class QuestionClassifier {
 		for (String regex : AnswerRules.getNERRule(type)) {
 			Pattern pattern = Pattern.compile(regex);
 			Matcher regexMatcher = pattern.matcher(text);
-			while (regexMatcher.find()) {
+			while(regexMatcher.find()){
 				tags.add(regexMatcher.group(1));
 			}
 		}

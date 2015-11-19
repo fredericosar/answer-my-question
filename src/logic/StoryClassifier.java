@@ -26,6 +26,16 @@ public class StoryClassifier {
 	 * Generate bags of words
 	 */
 	public void generateBagOfWords(Story story) {
+		
+		/* tests */
+//		try {
+//			InputStream is = new FileInputStream("libraries/openNLP/models/en-sent.bin");
+//		} catch (FileNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
+		
 		/* process sentences */
 		DocumentPreprocessor dp = new DocumentPreprocessor(new StringReader(story.getText().replace("'", "")));
 		for (List<HasWord> sentence : dp) {

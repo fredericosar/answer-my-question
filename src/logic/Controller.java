@@ -14,6 +14,7 @@ import answer.WhenAnswerer;
 import answer.WhereAnswerer;
 import answer.WhichAnswerer;
 import answer.WhoAnswerer;
+import answer.WhyAnswerer;
 import boilerplate.*;
 
 public class Controller {
@@ -61,7 +62,7 @@ public class Controller {
 			/* create a generic object */
 			switch (entry.getValue().getType()) {
 			case WHO:
-				WhoAnswerer who = new WhoAnswerer(story, sc, scores);
+				WhoAnswerer who = new WhoAnswerer(question, qc, story, sc, scores);
 				who.answer();
 				break;
 			case WHERE:
@@ -79,6 +80,10 @@ public class Controller {
 			case HOW:
 				HowAnswerer how = new HowAnswerer(question, story, sc, scores);
 				how.answer();
+				break;
+			case WHY:
+				WhyAnswerer why = new WhyAnswerer(question, story, sc, scores);
+				why.answer();
 				break;
 			case WHICH:
 				WhichAnswerer which = new WhichAnswerer(question, story, sc, scores);

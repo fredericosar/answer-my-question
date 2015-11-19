@@ -11,6 +11,7 @@ import boilerplate.Question;
 import boilerplate.Story;
 import edu.stanford.nlp.ling.HasWord;
 import edu.stanford.nlp.tagger.maxent.MaxentTagger;
+import edu.washington.cs.knowitall.morpha.MorphaStemmer;
 
 public class CommonAnswerer {
 
@@ -32,17 +33,13 @@ public class CommonAnswerer {
 				/* get each word on question */
 				for(HasWord w2 : question.getBagOfWords()){
 					if(!sw.isStopWord(w1.word().toLowerCase())){
-//						if(MorphaStemmer.morpha(w1.word(),false).toLowerCase().equals(MorphaStemmer.morpha(w2.word(),false).toLowerCase())){
-						if(w1.word().toLowerCase().equals(w2.word().toLowerCase())){
+						if(MorphaStemmer.stem((w1.word().toLowerCase())).equals(MorphaStemmer.stem((w2.word().toLowerCase())))){
+//						if(w1.word().toLowerCase().equals(w2.word().toLowerCase())){
 							if(!matchedSoFar.contains((w1.word().toLowerCase()))){
-//								if(tagger.tagString(w1.word()).contains("VB")){
-									score = score + Scores.CONFIDENT;
-								}else{
-									score = score + Scores.CLUE;
-								}
-								matchedSoFar.add(w1.word().toLowerCase());
+								score = score + Scores.CLUE;
 							}
-//						}
+							matchedSoFar.add(w1.word().toLowerCase());
+						}
 					}
 				}
 			}
@@ -67,11 +64,22 @@ public class CommonAnswerer {
 	}
 	
 	/**
-	 * Regex Matcher
+	 * Boolean Regex Matcher - Gets a SENTENCE and a REGEX and return true if the REGEX is a match
 	 */
 	public static boolean regexMatcher(String sentence, String regex) {
 		Pattern pattern = Pattern.compile(regex.toLowerCase());
 		Matcher regexMatcher = pattern.matcher(sentence.toLowerCase());
 		return regexMatcher.find();
+	}
+	
+	/**
+	 * Regex Matcher - Gets a SENTENCE and a REGEX and return all matches
+	 */
+	public static String regexMatcherSentence(String sentence, String regex) {
+		Pattern pattern = Pattern.compile(regex.toLowerCase());
+		Matcher regexMatcher = pattern.matcher(sentence.toLowerCase());
+		if(regexMatcher.find()){
+			return regexMatcher.group(1);
+		} else return "";
 	}
 }

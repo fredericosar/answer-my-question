@@ -40,7 +40,8 @@ public class QuestionRules {
 			return whenRules;
 		if (type == QType.WHERE)
 			return whereRules;
-		else
+		if (type == QType.WHO)
 			return whoRules;
+		else return new ArrayList<String>();
 	}
 }
