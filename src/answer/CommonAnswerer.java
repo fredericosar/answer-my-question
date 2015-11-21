@@ -10,7 +10,6 @@ import rules.StopWords;
 import boilerplate.Question;
 import boilerplate.Story;
 import edu.stanford.nlp.ling.HasWord;
-import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 import edu.washington.cs.knowitall.morpha.MorphaStemmer;
 
 public class CommonAnswerer {
@@ -19,7 +18,7 @@ public class CommonAnswerer {
 	 * Return an array of scores for the given bag
 	 * based on bag for the story
 	 */
-	public static ArrayList<Integer> getIntersectionScores(Question question, Story story, MaxentTagger tagger) {
+	public static ArrayList<Integer> getIntersectionScores(Question question, Story story) {
 		/* stop word */
 		StopWords sw = new StopWords();
 		/* get intersection score */
@@ -70,16 +69,5 @@ public class CommonAnswerer {
 		Pattern pattern = Pattern.compile(regex.toLowerCase());
 		Matcher regexMatcher = pattern.matcher(sentence.toLowerCase());
 		return regexMatcher.find();
-	}
-	
-	/**
-	 * Regex Matcher - Gets a SENTENCE and a REGEX and return all matches
-	 */
-	public static String regexMatcherSentence(String sentence, String regex) {
-		Pattern pattern = Pattern.compile(regex.toLowerCase());
-		Matcher regexMatcher = pattern.matcher(sentence.toLowerCase());
-		if(regexMatcher.find()){
-			return regexMatcher.group(1);
-		} else return "";
 	}
 }

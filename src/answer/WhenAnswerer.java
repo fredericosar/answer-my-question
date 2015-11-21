@@ -1,6 +1,7 @@
 package answer;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 
 import logic.StoryClassifier;
 import rules.Scores;
@@ -32,7 +33,7 @@ public class WhenAnswerer {
 			/* get sentence */
 			String sentence = story.getSentence(i);
 			/* rule #1 */
-			if(!sc.findNER(sc.getNER(sentence), AType.DATE).isEmpty()){
+			if(!sc.findTYPE(sc.getNER(sentence), AType.DATE).isEmpty()){
 				innerScore.set(i, innerScore.get(i) + Scores.GOOD_CLUE + scores.get(i));
 			}
 			/* rule #2 */
@@ -50,7 +51,7 @@ public class WhenAnswerer {
 		}
 		/* answer */
 		String bestSentence = story.getSentence(CommonAnswerer.findBest(innerScore));
-		ArrayList<String> tags = sc.findNER(sc.getNER(bestSentence), AType.DATE);
+		LinkedHashSet<String> tags = sc.findTYPE(sc.getNER(bestSentence), AType.DATE);
 		if(!tags.isEmpty()){
 			for(String tag : tags) System.out.print(tag + " ");
 		}else{

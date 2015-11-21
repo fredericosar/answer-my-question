@@ -2,6 +2,7 @@ package logic;
 
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -12,7 +13,9 @@ import boilerplate.Story;
 import edu.stanford.nlp.ie.AbstractSequenceClassifier;
 import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.ling.HasWord;
+import edu.stanford.nlp.process.CoreLabelTokenFactory;
 import edu.stanford.nlp.process.DocumentPreprocessor;
+import edu.stanford.nlp.process.PTBTokenizer;
 
 public class StoryClassifier {
 	
@@ -26,18 +29,10 @@ public class StoryClassifier {
 	 * Generate bags of words
 	 */
 	public void generateBagOfWords(Story story) {
-		
-		/* tests */
-//		try {
-//			InputStream is = new FileInputStream("libraries/openNLP/models/en-sent.bin");
-//		} catch (FileNotFoundException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		
-		
+				
 		/* process sentences */
 		DocumentPreprocessor dp = new DocumentPreprocessor(new StringReader(story.getText().replace("'", "")));
+		dp.setTokenizerFactory(PTBTokenizer.factory(new CoreLabelTokenFactory(), "normalizeParentheses=false, normalizeOtherBrackets=false, invertible=true"));
 		for (List<HasWord> sentence : dp) {
 			story.addBagOfWords(sentence);
 		}
@@ -54,8 +49,8 @@ public class StoryClassifier {
 	/**
 	 * Find NER tags based on the given rule type
 	 */
-	public ArrayList<String> findNER(String text, AType type) {
-		ArrayList<String> tags = new ArrayList<>();
+	public LinkedHashSet<String> findTYPE(String text, AType type) {
+		LinkedHashSet<String> tags = new LinkedHashSet<>();
 		for (String regex : AnswerRules.getNERRule(type)) {
 			Pattern pattern = Pattern.compile(regex);
 			Matcher regexMatcher = pattern.matcher(text);

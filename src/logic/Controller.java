@@ -56,7 +56,7 @@ public class Controller {
 			/* generate bags of words for question */
 			qc.generateBagOfWords(question);
 			/* generate intersection scores */
-			ArrayList<Integer> scores = CommonAnswerer.getIntersectionScores(question, story, tagger);
+			ArrayList<Integer> scores = CommonAnswerer.getIntersectionScores(question, story);
 			/* look for question type */
 			System.out.print("Answer: ");
 			/* create a generic object */
@@ -78,7 +78,7 @@ public class Controller {
 				what.answer();
 				break;
 			case HOW:
-				HowAnswerer how = new HowAnswerer(question, story, sc, scores);
+				HowAnswerer how = new HowAnswerer(question, story, sc, scores, tagger);
 				how.answer();
 				break;
 			case WHY:

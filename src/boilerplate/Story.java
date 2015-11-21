@@ -31,7 +31,7 @@ public class Story {
 	 * Get a sentence for a given position
 	 */
 	public String getSentence(int i) {
-		return Sentence.listToString(bagsOfWords.get(i));
+		return Sentence.listToOriginalTextString(bagsOfWords.get(i)).trim().replace("\n", " ");
 	}
 
 	

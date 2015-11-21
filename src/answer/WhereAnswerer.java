@@ -1,6 +1,7 @@
 package answer;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 
 import logic.StoryClassifier;
 import boilerplate.*;
@@ -31,13 +32,13 @@ public class WhereAnswerer {
 				scores.set(i, scores.get(i) + Scores.GOOD_CLUE);
 			}
 			/* rule #3 */
-			if(!sc.findNER(sc.getNER(sentence), AType.LOCATION).isEmpty()){
+			if(!sc.findTYPE(sc.getNER(sentence), AType.LOCATION).isEmpty()){
 				scores.set(i, scores.get(i) + Scores.CONFIDENT);
 			}
 		}
 		/* answer */
 		String bestSentence = story.getSentence(CommonAnswerer.findBest(scores));
-		ArrayList<String> tags = sc.findNER(sc.getNER(bestSentence), AType.LOCATION);
+		LinkedHashSet<String> tags = sc.findTYPE(sc.getNER(bestSentence), AType.LOCATION);
 		if(!tags.isEmpty()){
 			for(String tag : tags) System.out.print(tag + " ");
 		}else{

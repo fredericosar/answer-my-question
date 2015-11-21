@@ -1,6 +1,9 @@
 package answer;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
+
+import com.sun.corba.se.impl.logging.OMGSystemException;
 
 import logic.QuestionClassifier;
 import logic.StoryClassifier;
@@ -32,26 +35,29 @@ public class WhoAnswerer {
 			/* get sentence */
 			String sentence = story.getSentence(i);
 			/* rule from Rillof's paper #3 */
-			if(sc.findNER(sc.getNER(sentence), AType.PERSON).isEmpty()){
+			if(sc.findTYPE(sc.getNER(sentence), AType.PERSON).isEmpty()){
 				if(CommonAnswerer.regexMatcher(sentence, "name")){
 					scores.set(i, scores.get(i) + Scores.GOOD_CLUE);
 				}
 			}
 			/* rule from Rillof's paper  #4 */
-			if(!sc.findNER(sc.getNER(sentence), AType.PERSON).isEmpty()){
+			if(!sc.findTYPE(sc.getNER(sentence), AType.PERSON).isEmpty()){
 				scores.set(i, scores.get(i) + Scores.GOOD_CLUE);
 			}
-//			/* rule by Fred #1 */
-//			String NN = CommonAnswerer.regexMatcherSentence(question.getQuestion(), "is the (.*)?");
-//			if(!NN.isEmpty()){
-//				String[] test = NN.split("\\s");
-//				if(CommonAnswerer.regexMatcher(sentence, test[0])){
-//					scores.set(i, scores.get(i) + Scores.CONFIDENT);
-//				}
-//			}
 		}
+		
 		/* answer */
 		String bestSentence = story.getSentence(CommonAnswerer.findBest(scores));
-		System.out.println(bestSentence);
+		if(CommonAnswerer.regexMatcher(question.getQuestion(), "is the (.*)?")){
+			LinkedHashSet<String> tags = sc.findTYPE(sc.getNER(bestSentence), AType.PERSON);
+			if(!tags.isEmpty()){
+				for(String tag : tags) System.out.print(tag + " ");
+			}else{
+				System.out.print(bestSentence);
+			}
+			System.out.println();
+		}else {
+			System.out.println(bestSentence);
+		}
 	}
 }
