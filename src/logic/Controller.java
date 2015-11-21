@@ -14,6 +14,7 @@ import answer.WhenAnswerer;
 import answer.WhereAnswerer;
 import answer.WhichAnswerer;
 import answer.WhoAnswerer;
+import answer.WhoseAnswerer;
 import answer.WhyAnswerer;
 import boilerplate.*;
 
@@ -88,6 +89,10 @@ public class Controller {
 			case WHICH:
 				WhichAnswerer which = new WhichAnswerer(question, story, sc, scores);
 				which.answer();
+				break;
+			case WHOSE:
+				WhoseAnswerer whose = new WhoseAnswerer(question, story, sc, scores);
+				whose.answer();
 				break;
 			default:
 				System.out.println();
