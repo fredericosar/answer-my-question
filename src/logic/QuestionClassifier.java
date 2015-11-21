@@ -7,7 +7,9 @@ import java.util.regex.*;
 import edu.stanford.nlp.ie.AbstractSequenceClassifier;
 import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.ling.HasWord;
+import edu.stanford.nlp.process.CoreLabelTokenFactory;
 import edu.stanford.nlp.process.DocumentPreprocessor;
+import edu.stanford.nlp.process.PTBTokenizer;
 import rules.*;
 import rules.AnswerRules.AType;
 import boilerplate.*;
@@ -58,6 +60,7 @@ public class QuestionClassifier {
 	public void generateBagOfWords(Question question) {
 		/* process sentences */
 		DocumentPreprocessor dp = new DocumentPreprocessor(new StringReader(question.getQuestion().replace("'", "")));
+		dp.setTokenizerFactory(PTBTokenizer.factory(new CoreLabelTokenFactory(), "normalizeParentheses=false, normalizeOtherBrackets=false, invertible=true"));
 		for (List<HasWord> words : dp) {
 			question.setBagOfWords(words);
 		}

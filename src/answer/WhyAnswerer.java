@@ -27,17 +27,6 @@ public class WhyAnswerer {
 	 * Answer the WHY question
 	 */
 	public void answer() {
-		/* rule #1 */
-//		getTopScores(.20); 
-		/* rule #2 and #3 */
-		for(int position : getBestPositions()){
-			try{
-				scores.set(position - 1, scores.get(position - 1) + Scores.CLUE);
-			} catch(IndexOutOfBoundsException e) {}
-			try{
-				scores.set(position + 1, scores.get(position + 1) + Scores.GOOD_CLUE);
-			} catch(IndexOutOfBoundsException e) {}
-		}
 		for(int i = 0; i < story.getBagsOfWords().size(); i++){
 			/* get sentence */
 			String sentence = story.getSentence(i);
@@ -52,38 +41,6 @@ public class WhyAnswerer {
 		}
 		String bestSentence = story.getSentence(CommonAnswerer.findBest(scores));
 		System.out.println(bestSentence);
-	}
-
-	/**
-	 * Update top scores and keep the top 'percent'
-	 */
-	private void getTopScores(double percent) {
-		int tops = (int) (scores.size() * percent);
-		PriorityQueue<Integer> topScores = new PriorityQueue<>(tops + 1);
-		for (int num : scores) {
-			topScores.add(num);
-			if (topScores.size() > tops + 1)
-				topScores.poll();
-		}
-		
-		for(int i = 0; i < story.getBagsOfWords().size(); i++){
-			if(topScores.contains(scores.get(i))){
-				scores.set(i, Scores.CLUE);
-			}else{
-				scores.set(i, 0);
-			}
-		}	
-	}
-	
-	/**
-	 * Get best positions of array list
-	 */
-	private ArrayList<Integer> getBestPositions(){
-		ArrayList<Integer> positions = new ArrayList<Integer>();
-		for(int i = 0; i < story.getBagsOfWords().size(); i++){
-			if(scores.get(i) == Scores.CLUE) positions.add(i);
-		}
-		return positions;
 	}
 	
 }

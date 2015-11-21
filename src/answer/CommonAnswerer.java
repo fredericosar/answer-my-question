@@ -10,6 +10,7 @@ import rules.StopWords;
 import boilerplate.Question;
 import boilerplate.Story;
 import edu.stanford.nlp.ling.HasWord;
+import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 import edu.washington.cs.knowitall.morpha.MorphaStemmer;
 
 public class CommonAnswerer {
@@ -18,7 +19,7 @@ public class CommonAnswerer {
 	 * Return an array of scores for the given bag
 	 * based on bag for the story
 	 */
-	public static ArrayList<Integer> getIntersectionScores(Question question, Story story) {
+	public static ArrayList<Integer> getIntersectionScores(Question question, Story story, MaxentTagger tagger) {
 		/* stop word */
 		StopWords sw = new StopWords();
 		/* get intersection score */
@@ -35,7 +36,11 @@ public class CommonAnswerer {
 						if(MorphaStemmer.stem((w1.word().toLowerCase())).equals(MorphaStemmer.stem((w2.word().toLowerCase())))){
 //						if(w1.word().toLowerCase().equals(w2.word().toLowerCase())){
 							if(!matchedSoFar.contains((w1.word().toLowerCase()))){
-								score = score + Scores.CLUE;
+								if(regexMatcher(tagger.tagString(w1.word()), "([^ ]+)_VB[A-Z]")){
+									score = score + Scores.CONFIDENT;
+								}else {
+									score = score + Scores.CLUE;
+								}
 							}
 							matchedSoFar.add(w1.word().toLowerCase());
 						}
