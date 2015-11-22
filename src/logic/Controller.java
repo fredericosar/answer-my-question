@@ -1,8 +1,11 @@
 package logic;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Map.Entry;
 
+import opennlp.tools.parser.*;
 import edu.stanford.nlp.ie.AbstractSequenceClassifier;
 import edu.stanford.nlp.ie.crf.CRFClassifier;
 import edu.stanford.nlp.ling.CoreLabel;
@@ -24,6 +27,7 @@ public class Controller {
 	private Questions questions;
 	private QuestionClassifier qc;
 	private MaxentTagger tagger;
+	private Parser parser;
 	
 	public Controller() throws Exception {
 		/* load NER classifier */
@@ -37,6 +41,10 @@ public class Controller {
 		/* load POSTAGGER models */
 		String posModel = "libraries/stanford-postagger/models/english-bidirectional-distsim.tagger";
 		tagger = new MaxentTagger(posModel);
+		/* load Parser */
+		InputStream modelIn = new FileInputStream("libraries/openNLP-parser/models/en-parser-chunking.bin");
+		ParserModel model = new ParserModel(modelIn);
+		parser = ParserFactory.create(model);
 		/* create classifiers */
 		qc = new QuestionClassifier(NERclassifier);
 		sc = new StoryClassifier(NERclassifier);
@@ -62,7 +70,7 @@ public class Controller {
 			/* create a generic object */
 			switch (entry.getValue().getType()) {
 			case WHO:
-				WhoAnswerer who = new WhoAnswerer(question, qc, story, sc, scores);
+				WhoAnswerer who = new WhoAnswerer(question, story, sc, scores, tagger);
 				who.answer();
 				break;
 			case WHERE:
@@ -74,7 +82,7 @@ public class Controller {
 				when.answer();
 				break;
 			case WHAT:
-				WhatAnswerer what = new WhatAnswerer(question, story, sc, scores, tagger);
+				WhatAnswerer what = new WhatAnswerer(question, story, sc, scores);
 				what.answer();
 				break;
 			case HOW:

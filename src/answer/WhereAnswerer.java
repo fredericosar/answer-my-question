@@ -38,11 +38,15 @@ public class WhereAnswerer {
 		}
 		/* answer */
 		String bestSentence = story.getSentence(CommonAnswerer.findBest(scores));
-		LinkedHashSet<String> tags = sc.findTYPE(sc.getNER(bestSentence), AType.LOCATION);
-		if(!tags.isEmpty()){
-			for(String tag : tags) System.out.print(tag + " ");
+		/* find location on sentence */
+		LinkedHashSet<String> words = sc.findTYPE(sc.getNER(bestSentence), AType.LOCATION);
+		if(!words.isEmpty()){
+			for(String word : words){
+				System.out.print(word + " ");
+			}
 		}else{
-			System.out.print(bestSentence);
+			/* location not found */
+			System.out.println(bestSentence);
 		}
 		System.out.println();
 	}

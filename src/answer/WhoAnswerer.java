@@ -5,6 +5,7 @@ import java.util.LinkedHashSet;
 
 import com.sun.corba.se.impl.logging.OMGSystemException;
 
+import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 import logic.QuestionClassifier;
 import logic.StoryClassifier;
 import boilerplate.*;
@@ -14,17 +15,17 @@ import rules.AnswerRules.AType;
 public class WhoAnswerer {
 
 	private Question question;
-	private QuestionClassifier qc;
 	private Story story;
 	private StoryClassifier sc;
 	private ArrayList<Integer> scores;
+	private MaxentTagger tagger;
 
-	public WhoAnswerer(Question question, QuestionClassifier qc, Story story, StoryClassifier sc, ArrayList<Integer> scores) {
+	public WhoAnswerer(Question question, Story story, StoryClassifier sc, ArrayList<Integer> scores, MaxentTagger tagger) {
 		this.question = question;
-		this.qc = qc;
 		this.story = story;
 		this.sc = sc;
 		this.scores = scores;
+		this.tagger = tagger;
 	}
 
 	/**
@@ -48,16 +49,27 @@ public class WhoAnswerer {
 		
 		/* answer */
 		String bestSentence = story.getSentence(CommonAnswerer.findBest(scores));
+		/* get word after who */
+		LinkedHashSet<String> nextWho = sc.findTYPE(question.getQuestion(), AType.WHO_NEXT);
+		/* find person */
 		if(CommonAnswerer.regexMatcher(question.getQuestion(), "is the (.*)?")){
 			LinkedHashSet<String> tags = sc.findTYPE(sc.getNER(bestSentence), AType.PERSON);
 			if(!tags.isEmpty()){
-				for(String tag : tags) System.out.print(tag + " ");
+				for(String tag : tags) {
+					System.out.print(tag + " ");
+				}
 			}else{
-				System.out.print(bestSentence);
+				System.out.println(bestSentence);
 			}
-			System.out.println();
-		}else {
-			System.out.println(bestSentence);
+//		}else if(!nextWho.isEmpty()){
+		}else{
+//			String next = nextWho.iterator().next();
+			/* check if verb */
+//			if(CommonAnswerer.regexMatcher(tagger.tagString(next), "([^ ]+)_VB[A-Z]*")){
+//				System.out.println(bestSentence);
+//			} else{
+				System.out.println(bestSentence);
+//			}
 		}
 	}
 }

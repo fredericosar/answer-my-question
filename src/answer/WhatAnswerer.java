@@ -1,11 +1,8 @@
 package answer;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 
-import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 import logic.StoryClassifier;
-import rules.AnswerRules.AType;
 import rules.Scores;
 import boilerplate.Question;
 import boilerplate.Story;
@@ -14,16 +11,12 @@ public class WhatAnswerer {
 
 	private Question question;
 	private Story story;
-	private StoryClassifier sc;
 	private ArrayList<Integer> scores;
-	private MaxentTagger tagger;
 
-	public WhatAnswerer(Question question, Story story, StoryClassifier sc, ArrayList<Integer> scores, MaxentTagger tagger) {
+	public WhatAnswerer(Question question, Story story, StoryClassifier sc, ArrayList<Integer> scores) {
 		this.question = question;
 		this.story = story;
 		this.scores = scores;
-		this.sc = sc;
-		this.tagger = tagger;
 	}
 	
 	/**
@@ -51,14 +44,6 @@ public class WhatAnswerer {
 					scores.set(i, scores.get(i) + Scores.SLAM_DUNK);
 				}
 			}
-			/* rule 5 */
-			// @TODO: Finish implementation 
-//			if(CommonAnswerer.regexMatcher(question.getQuestion(), "name")){
-//				LinkedHashSet<String> proper_nouns = sc.findTYPE(tagger.tagString(sentence), AType.PROPER_NOUN);
-//				if(!proper_nouns.isEmpty()){
-//					
-//				}
-//			}
 		}
 		/* answer */
 		String bestSentence = story.getSentence(CommonAnswerer.findBest(scores));

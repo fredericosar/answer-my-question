@@ -8,11 +8,13 @@ public class AnswerRules {
 	/* Stanford's NER RULES and TYPES*/
 	public enum AType {
 		PERSON, LOCATION, DATE, MONEY, PERCENT, ORGANIZATION,
-		NUMBER, PROPER_NOUN;
+		NUMBER, PROPER_NOUN, BECAUSE, WHO_NEXT;
 	};
 	/* Stanford's TAGs */
 	private static final List<String> numberRule = Arrays.asList("([^ ]+)_CD");
 	private static final List<String> properNoun = Arrays.asList("([^ ]+)_NNP([A-Z])*");
+	private static final List<String> becauseRule = Arrays.asList("(because (.*))");
+	private static final List<String> whoVerb = Arrays.asList("[W|w]ho (\\w*)");
 	/* Identify PERSON */
 	private static final List<String> personRule = Arrays.asList("<PERSON>(.*?)</PERSON>");
 	/* Identify LOCATION */
@@ -46,6 +48,10 @@ public class AnswerRules {
 			return numberRule;
 		}else if(type == AType.PROPER_NOUN){
 			return properNoun;
+		}else if(type == AType.BECAUSE){
+			return becauseRule;
+		}else if(type == AType.WHO_NEXT){
+			return whoVerb;
 		}else {
 			return new ArrayList<String>();
 		}
