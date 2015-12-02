@@ -1,11 +1,8 @@
 package logic;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Map.Entry;
 
-import opennlp.tools.parser.*;
 import edu.stanford.nlp.ie.AbstractSequenceClassifier;
 import edu.stanford.nlp.ie.crf.CRFClassifier;
 import edu.stanford.nlp.ling.CoreLabel;
@@ -17,7 +14,7 @@ import answer.WhenAnswerer;
 import answer.WhereAnswerer;
 import answer.WhichAnswerer;
 import answer.WhoAnswerer;
-import answer.WhoseAnswerer;
+import answer.UnknownAnswerer;
 import answer.WhyAnswerer;
 import boilerplate.*;
 
@@ -28,7 +25,6 @@ public class Controller {
     private Questions questions;
     private QuestionClassifier qc;
     private MaxentTagger tagger;
-    private Parser parser;
 
     public Controller() throws Exception {
         /* load NER classifier */
@@ -42,10 +38,6 @@ public class Controller {
         /* load POSTAGGER models */
         String posModel = "libraries/stanford-postagger/models/english-bidirectional-distsim.tagger";
         tagger = new MaxentTagger(posModel);
-        /* load Parser */
-        InputStream modelIn = new FileInputStream("libraries/openNLP-parser/models/en-parser-chunking.bin");
-        ParserModel model = new ParserModel(modelIn);
-        parser = ParserFactory.create(model);
         /* create classifiers */
         qc = new QuestionClassifier(NERclassifier);
         sc = new StoryClassifier(NERclassifier);
@@ -83,7 +75,7 @@ public class Controller {
                 when.answer();
                 break;
             case WHAT:
-                WhatAnswerer what = new WhatAnswerer(question, story, sc, scores, tagger);
+                WhatAnswerer what = new WhatAnswerer(question, story, scores);
                 what.answer();
                 break;
             case HOW:
@@ -91,15 +83,15 @@ public class Controller {
                 how.answer();
                 break;
             case WHY:
-                WhyAnswerer why = new WhyAnswerer(question, story, sc, scores);
+                WhyAnswerer why = new WhyAnswerer(story, sc, scores);
                 why.answer();
                 break;
             case WHICH:
-                WhichAnswerer which = new WhichAnswerer(question, story, sc, scores);
+                WhichAnswerer which = new WhichAnswerer(story, scores);
                 which.answer();
                 break;
-            case WHOSE:
-                WhoseAnswerer whose = new WhoseAnswerer(question, story, sc, scores);
+            case UNKNOWN:
+                UnknownAnswerer whose = new UnknownAnswerer(story, scores);
                 whose.answer();
                 break;
             default:

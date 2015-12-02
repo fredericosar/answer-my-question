@@ -9,8 +9,6 @@ public class QuestionRules {
     private static final List<String> whichRules = Arrays.asList("^Which", ".*?\\bwhich\\b.*?");
     /* Identify WHY */
     private static final List<String> whyRules = Arrays.asList("^Why", ".*?\\bwhy\\b.*?");
-    /* Identify WHOSE */
-    private static final List<String> whoseRules = Arrays.asList("^Whose", ".*?\\bwhose\\b.*?");
     /* Identify WHAT */
     private static final List<String> whatRules = Arrays.asList("^What", ".*?\\bwhat\\b.*?");
     /* Identify HOW */
@@ -30,8 +28,6 @@ public class QuestionRules {
             return whichRules;
         if (type == QType.WHY)
             return whyRules;
-        if (type == QType.WHOSE)
-            return whoseRules;
         if (type == QType.WHAT)
             return whatRules;
         if (type == QType.HOW)

@@ -15,78 +15,77 @@ import rules.AnswerRules.AType;
 import boilerplate.*;
 import boilerplate.Question.QType;
 
-
 public class QuestionClassifier {
-	
-	private Map<QType, List<String>> rules;
-	private AbstractSequenceClassifier<CoreLabel> classifier;
-	
-	public QuestionClassifier(AbstractSequenceClassifier<CoreLabel> classifier){
-		this.classifier = classifier;
-		rules = new HashMap<QType, List<String>>();
-		getRules();
-	}
 
-	/**
-	 * Get all possible types for questions
-	 */
-	private void getRules() {
-		for (QType type : QType.values()) {
-			rules.put(type, QuestionRules.getRules(type));
-		}
-	}
+    private Map<QType, List<String>> rules;
+    private AbstractSequenceClassifier<CoreLabel> classifier;
 
-	/**
-	 * Regex Matcher for preset rules
-	 */
-	public void regexMatcher(Question question) {
-		
-		for(String word : question.getQuestion().split("\\s")){
-			for (QType type : rules.keySet()) {
-				for (String regex : rules.get(type)) {
-					Pattern pattern = Pattern.compile(regex);
-					Matcher regexMatcher = pattern.matcher(word);
-					while (regexMatcher.find()) {
-						question.addType(type);
-					}
-				}
-			}
-		}
-	}
-	
-	/**
-	 * Generate bag of words
-	 */
-	public void generateBagOfWords(Question question) {
-		/* process sentences */
-		DocumentPreprocessor dp = new DocumentPreprocessor(new StringReader(question.getQuestion().replace("'", "")));
-		dp.setTokenizerFactory(PTBTokenizer.factory(new CoreLabelTokenFactory(), "normalizeParentheses=false, normalizeOtherBrackets=false, invertible=true"));
-		for (List<HasWord> words : dp) {
-			question.setBagOfWords(words);
-		}
-	}
+    public QuestionClassifier(AbstractSequenceClassifier<CoreLabel> classifier) {
+        this.classifier = classifier;
+        rules = new HashMap<QType, List<String>>();
+        getRules();
+    }
 
-	/**
-	 * Get NER for the given question
-	 */
-	public String getNER(String text) {
-		/* get NER for text */
-		return classifier.classifyWithInlineXML(text);
-	}
-	
-	/**
-	 * Find NER tags based on the given rule type
-	 */
-	public ArrayList<String> findNER(String text, AType type) {
-		ArrayList<String> tags = new ArrayList<>();
-		for (String regex : AnswerRules.getNERRule(type)) {
-			Pattern pattern = Pattern.compile(regex);
-			Matcher regexMatcher = pattern.matcher(text);
-			while(regexMatcher.find()){
-				tags.add(regexMatcher.group(1));
-			}
-		}
-		return tags;
-	}
+    /**
+     * Get all possible types for questions
+     */
+    private void getRules() {
+        for (QType type : QType.values()) {
+            rules.put(type, QuestionRules.getRules(type));
+        }
+    }
+
+    /**
+     * Regex Matcher for preset rules
+     */
+    public void regexMatcher(Question question) {
+
+        for (String word : question.getQuestion().split("\\s")) {
+            for (QType type : rules.keySet()) {
+                for (String regex : rules.get(type)) {
+                    Pattern pattern = Pattern.compile(regex);
+                    Matcher regexMatcher = pattern.matcher(word);
+                    while (regexMatcher.find()) {
+                        question.addType(type);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Generate bag of words
+     */
+    public void generateBagOfWords(Question question) {
+        /* process sentences */
+        DocumentPreprocessor dp = new DocumentPreprocessor(new StringReader(question.getQuestion().replace("'", "")));
+        dp.setTokenizerFactory(PTBTokenizer.factory(new CoreLabelTokenFactory(), "normalizeParentheses=false, normalizeOtherBrackets=false, invertible=true"));
+        for (List<HasWord> words : dp) {
+            question.setBagOfWords(words);
+        }
+    }
+
+    /**
+     * Get NER for the given question
+     */
+    public String getNER(String text) {
+        /* get NER for text */
+        return classifier.classifyWithInlineXML(text);
+    }
+
+    /**
+     * Find NER tags based on the given rule type
+     */
+    public ArrayList<String> findNER(String text, AType type) {
+        ArrayList<String> tags = new ArrayList<>();
+        for (String regex : AnswerRules.getNERRule(type)) {
+            Pattern pattern = Pattern.compile(regex);
+            Matcher regexMatcher = pattern.matcher(text);
+            while (regexMatcher.find()) {
+                tags.add(regexMatcher.group(1));
+            }
+        }
+        return tags;
+    }
 
 }

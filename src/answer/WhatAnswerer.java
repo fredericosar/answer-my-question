@@ -1,12 +1,8 @@
 package answer;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 
-import edu.stanford.nlp.tagger.maxent.MaxentTagger;
-import logic.StoryClassifier;
 import rules.Scores;
-import rules.AnswerRules.AType;
 import boilerplate.Question;
 import boilerplate.Story;
 
@@ -15,32 +11,17 @@ public class WhatAnswerer {
     private Question question;
     private Story story;
     private ArrayList<Integer> scores;
-    private StoryClassifier sc;
-    private MaxentTagger tagger;
 
-    public WhatAnswerer(Question question, Story story, StoryClassifier sc, ArrayList<Integer> scores, MaxentTagger tagger) {
+    public WhatAnswerer(Question question, Story story, ArrayList<Integer> scores) {
         this.question = question;
         this.story = story;
         this.scores = scores;
-        this.sc = sc;
-        this.tagger = tagger;
     }
 
     /**
      * Answer the WHAT question
      */
     public void answer() {
-//        /* get word after who */
-//        LinkedHashSet<String> nextWhat = sc.findTYPE(question.getQuestion(), AType.WHAT_NEXT);
-//        /* split words */
-//        String[] wordsMatched = nextWhat.iterator().next().split("\\s");
-//        /* look for the verb */
-//        for(int i = 0; i < wordsMatched.length; i++){
-//            if (CommonAnswerer.regexMatcher(tagger.tagString(wordsMatched[i]), "([^ ]+)_VB[A-Z]*")) {
-//                System.out.println("ABC:" + wordsMatched[i]);
-//            }
-//        }
-        
         /* iterate on sentences */
         for (int i = 0; i < story.getBagsOfWords().size(); i++) {
             /* get sentence */

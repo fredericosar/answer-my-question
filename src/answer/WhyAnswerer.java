@@ -6,18 +6,15 @@ import java.util.LinkedHashSet;
 import rules.Scores;
 import rules.AnswerRules.AType;
 import logic.StoryClassifier;
-import boilerplate.Question;
 import boilerplate.Story;
 
 public class WhyAnswerer {
 
-    private Question question;
     private Story story;
     private StoryClassifier sc;
     private ArrayList<Integer> scores;
 
-    public WhyAnswerer(Question question, Story story, StoryClassifier sc, ArrayList<Integer> scores) {
-        this.question = question;
+    public WhyAnswerer(Story story, StoryClassifier sc, ArrayList<Integer> scores) {
         this.story = story;
         this.sc = sc;
         this.scores = scores;

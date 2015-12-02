@@ -27,9 +27,9 @@ public class Main {
         String directory = fileScanner.next();
 
         /* print messages in controlled environment */
-        // System.setErr(new PrintStream("runningMessages"));
+        System.setErr(new PrintStream("runningMessages"));
         /* print messages on a file */
-        System.setOut(new PrintStream("../ProjectGrader/myAnswers"));
+        // System.setOut(new PrintStream("../ProjectGrader/myAnswers"));
 
         /* create the controller variable */
         Controller controller = new Controller();

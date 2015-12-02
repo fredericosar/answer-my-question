@@ -17,46 +17,46 @@ import edu.stanford.nlp.process.DocumentPreprocessor;
 import edu.stanford.nlp.process.PTBTokenizer;
 
 public class StoryClassifier {
-	
-	private AbstractSequenceClassifier<CoreLabel> classifier;
-	
-	public StoryClassifier(AbstractSequenceClassifier<CoreLabel> classifier){
-		this.classifier = classifier;
-	}
-	
-	/**
-	 * Generate bags of words
-	 */
-	public void generateBagOfWords(Story story) {
-				
-		/* process sentences */
-		DocumentPreprocessor dp = new DocumentPreprocessor(new StringReader(story.getText().replace("'", "")));
-		dp.setTokenizerFactory(PTBTokenizer.factory(new CoreLabelTokenFactory(), "normalizeParentheses=false, normalizeOtherBrackets=false, invertible=true"));
-		for (List<HasWord> sentence : dp) {
-			story.addBagOfWords(sentence);
-		}
-	}
-	
-	/**
-	 * Get NER for the given text
-	 */
-	public String getNER(String text) {
-		/* get NER for text */
-		return classifier.classifyWithInlineXML(text);
-	}
-	
-	/**
-	 * Find NER tags based on the given rule type
-	 */
-	public LinkedHashSet<String> findTYPE(String text, AType type) {
-		LinkedHashSet<String> tags = new LinkedHashSet<>();
-		for (String regex : AnswerRules.getNERRule(type)) {
-			Pattern pattern = Pattern.compile(regex);
-			Matcher regexMatcher = pattern.matcher(text);
-			while (regexMatcher.find()) {
-				tags.add(regexMatcher.group(1));
-			}
-		}
-		return tags;
-	}
+
+    private AbstractSequenceClassifier<CoreLabel> classifier;
+
+    public StoryClassifier(AbstractSequenceClassifier<CoreLabel> classifier) {
+        this.classifier = classifier;
+    }
+
+    /**
+     * Generate bags of words
+     */
+    public void generateBagOfWords(Story story) {
+
+        /* process sentences */
+        DocumentPreprocessor dp = new DocumentPreprocessor(new StringReader(story.getText().replace("'", "")));
+        dp.setTokenizerFactory(PTBTokenizer.factory(new CoreLabelTokenFactory(), "normalizeParentheses=false, normalizeOtherBrackets=false, invertible=true"));
+        for (List<HasWord> sentence : dp) {
+            story.addBagOfWords(sentence);
+        }
+    }
+
+    /**
+     * Get NER for the given text
+     */
+    public String getNER(String text) {
+        /* get NER for text */
+        return classifier.classifyWithInlineXML(text);
+    }
+
+    /**
+     * Find NER tags based on the given rule type
+     */
+    public LinkedHashSet<String> findTYPE(String text, AType type) {
+        LinkedHashSet<String> tags = new LinkedHashSet<>();
+        for (String regex : AnswerRules.getNERRule(type)) {
+            Pattern pattern = Pattern.compile(regex);
+            Matcher regexMatcher = pattern.matcher(text);
+            while (regexMatcher.find()) {
+                tags.add(regexMatcher.group(1));
+            }
+        }
+        return tags;
+    }
 }

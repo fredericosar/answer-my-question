@@ -7,8 +7,7 @@ import java.util.List;
 public class AnswerRules {
     /* Stanford's NER RULES and TYPES */
     public enum AType {
-        PERSON, LOCATION, DATE, MONEY, PERCENT, ORGANIZATION, 
-        NUMBER, PROPER_NOUN, BECAUSE, WHO_NEXT, WHAT_NEXT;
+        PERSON, LOCATION, DATE, MONEY, PERCENT, ORGANIZATION, NUMBER, PROPER_NOUN, BECAUSE, WHO_NEXT, WHAT_NEXT;
     };
 
     /* Stanford's TAGs */

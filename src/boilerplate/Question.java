@@ -10,7 +10,7 @@ public class Question {
     private List<HasWord> bagOfWords;
 
     public enum QType {
-        WHICH, WHY, WHOSE, WHAT, HOW, WHEN, WHERE, WHO, UNKNOWN;
+        WHICH, WHY, WHAT, HOW, WHEN, WHERE, WHO, UNKNOWN;
     };
 
     /**
